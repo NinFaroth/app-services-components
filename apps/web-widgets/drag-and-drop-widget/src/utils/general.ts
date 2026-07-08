@@ -1,5 +1,6 @@
 import KeyboardBackend, { isKeyboardDragTrigger } from "react-dnd-accessible-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { createTransition } from "react-dnd-multi-backend";
 
@@ -49,6 +50,10 @@ export const MouseTransition = createTransition("mousedown", event => {
     return true;
 });
 
+export const TouchTransition = createTransition("touchstart", event => {
+    return event.type.indexOf("touch") !== -1;
+});
+
 export const DND_OPTIONS = (id: string) => {
     return {
         backends: [
@@ -56,9 +61,15 @@ export const DND_OPTIONS = (id: string) => {
                 id: `html5_${id}`,
                 preview: false,
                 handleKey: "html5",
-                backend: TouchBackend,
-                options: { enableTouchEvents: true, enableMouseEvents: true },
+                backend: HTML5Backend,
                 transition: MouseTransition
+            },
+            {
+                id: `touch_${id}`,
+                preview: false,
+                backend: TouchBackend,
+                options: { enableTouchEvents: true },
+                transition: TouchTransition
             },
             {
                 id: `keyboard_${id}`,
